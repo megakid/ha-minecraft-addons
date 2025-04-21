@@ -1,52 +1,87 @@
-# minecraft-geyser/Dockerfile
-# Builds the Docker image for the Home Assistant Add-on.
+#################
+# 1 Build Image #
+#################
 
-# Use an argument to specify the base image, allowing builds for different architectures.
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base-debian:bullseye
+ARG BUILD_FROM
+ARG BUILD_VERSION
 FROM ${BUILD_FROM}
 
-# Set shell for RUN commands
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+##################
+# 2 Modify Image #
+##################
 
-# Install necessary dependencies:
-# - openjdk-17-jre-headless: Java runtime for Minecraft server
-# - curl: For downloading files
-# - jq: For parsing JSON (used in run.sh to get download URLs)
-# - bashio: Home Assistant helper library (already included in base image, but good practice to ensure)
-# - procps: Provides 'ps' command (useful for debugging)
-# - crudini: Utility to manipulate ini files (server.properties)
-# - yq: Utility to manipulate YAML files (Geyser/Floodgate configs) - Install via pip
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        openjdk-17-jre-headless \
-        curl \
-        jq \
-        procps \
-        crudini \
-    # Install yq (YAML processor) via pip
-    && apt-get install -y --no-install-recommends python3 python3-pip \
-    && pip3 install --no-cache-dir yq \
-    # Clean up
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Set S6 wait time
+ENV S6_CMD_WAIT_FOR_SERVICES=1 \
+    S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
+    S6_SERVICES_GRACETIME=0
 
-# Create application directory
-WORKDIR /app
+##################
+# 3 Install apps #
+##################
 
-# Copy the run script into the container
-# S6 overlay will execute this script
-COPY run.sh /
-RUN chmod a+x /run.sh
+# Add rootfs
+COPY rootfs/ /
 
-# Define the entry point for the container using S6 overlay
-CMD [ "/run.sh" ]
+# Uses /bin for compatibility purposes
+# hadolint ignore=DL4005
+RUN if [ ! -f /bin/sh ] && [ -f /usr/bin/sh ]; then ln -s /usr/bin/sh /bin/sh; fi && \
+    if [ ! -f /bin/bash ] && [ -f /usr/bin/bash ]; then ln -s /usr/bin/bash /bin/bash; fi
 
-# Labeling (optional but good practice)
-LABEL io.hass.version="VERSION_TAG" \
-      io.hass.type="addon" \
-      io.hass.arch="amd64|aarch64|armv7" \
-      org.opencontainers.image.title="Minecraft Server (PaperMC + Geyser)" \
-      org.opencontainers.image.description="Runs a Minecraft PaperMC server with Geyser and Floodgate for Java/Bedrock cross-play." \
-      org.opencontainers.image.source="https://github.com/YOUR_GITHUB_USERNAME/ha-minecraft-addons" \
-      org.opencontainers.image.authors="Your Name <your.email@example.com>" \
-      org.opencontainers.image.licenses="MIT"
+# Modules
+ARG MODULES="00-banner.sh 00-global_var.sh"
+
+# Automatic modules download
+ADD "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/ha_automodules.sh" "/ha_automodules.sh"
+RUN chmod 744 /ha_automodules.sh && /ha_automodules.sh "$MODULES" && rm /ha_automodules.sh
+
+# Manual apps
+ENV PACKAGES=""
+
+# Automatic apps & bashio
+ADD "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/ha_autoapps.sh" "/ha_autoapps.sh"
+RUN chmod 744 /ha_autoapps.sh && /ha_autoapps.sh "$PACKAGES" && rm /ha_autoapps.sh
+
+################
+# 4 Entrypoint #
+################
+
+# Add entrypoint
+ENV S6_STAGE2_HOOK=/ha_entrypoint.sh
+ADD "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/ha_entrypoint.sh" "/ha_entrypoint.sh"
+
+# Entrypoint modifications
+ADD "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/ha_entrypoint_modif.sh" "/ha_entrypoint_modif.sh"
+RUN chmod 777 /ha_entrypoint.sh /ha_entrypoint_modif.sh && /ha_entrypoint_modif.sh && rm /ha_entrypoint_modif.sh
+
+ENTRYPOINT [ "/usr/bin/env" ]
+CMD [ "/ha_entrypoint.sh" ]
+
+############
+# 5 Labels #
+############
+
+ARG BUILD_ARCH
+ARG BUILD_DATE
+ARG BUILD_DESCRIPTION
+ARG BUILD_NAME
+ARG BUILD_REF
+ARG BUILD_REPOSITORY
+ARG BUILD_VERSION
+LABEL \
+    io.hass.name="${BUILD_NAME}" \
+    io.hass.description="${BUILD_DESCRIPTION}" \
+    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.type="addon" \
+    io.hass.version=${BUILD_VERSION} \
+    maintainer="megakid (https://github.com/megakid)" \
+    org.opencontainers.image.title="${BUILD_NAME}" \
+    org.opencontainers.image.description="${BUILD_DESCRIPTION}" \
+    org.opencontainers.image.vendor="Home Assistant Add-ons" \
+    org.opencontainers.image.authors="megakid (https://github.com/megakid)" \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.url="https://github.com/megakid" \
+    org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
+    org.opencontainers.image.documentation="https://github.com/${BUILD_REPOSITORY}/blob/main/README.md" \
+    org.opencontainers.image.created=${BUILD_DATE} \
+    org.opencontainers.image.revision=${BUILD_REF} \
+    org.opencontainers.image.version=${BUILD_VERSION}
