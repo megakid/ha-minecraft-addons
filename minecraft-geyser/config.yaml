@@ -28,8 +28,6 @@ options:
   GAMEMODE: survival
   PLUGINS: https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
   WHITELIST: player1,player2
-  ENABLE_WHITELIST: true
-  ENFORCE_WHITELIST: true
   EXISTING_WHITELIST_FILE: SYNCHRONIZE
   OPS: admin1,admin2
   EXISTING_OPS_FILE: SYNCHRONIZE
@@ -47,8 +45,8 @@ schema:
   GAMEMODE: list(survival|creative|adventure|spectator)
   PLUGINS: str
   WHITELIST: str
-  ENABLE_WHITELIST: bool
-  ENFORCE_WHITELIST: bool
+  ENABLE_WHITELIST: bool?
+  ENFORCE_WHITELIST: bool?
   EXISTING_WHITELIST_FILE: list(SKIP|SYNCHRONIZE|MERGE|SYNC_FILE_MERGE_LIST)
   USER_API_PROVIDER: list(playerdb|mojang)
   OPS: str
