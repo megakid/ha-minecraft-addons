@@ -1,0 +1,6 @@
+# minecraft-geyser/build.yaml
+# Specifies the base images for building the add-on locally for different architectures.
+build_from:
+  aarch64: "ghcr.io/home-assistant/aarch64-base-debian:bullseye"
+  amd64: "ghcr.io/home-assistant/amd64-base-debian:bullseye"
+  # armv7: "ghcr.io/home-assistant/armv7-base-debian:bullseye" # Uncomment if you test and support armv7

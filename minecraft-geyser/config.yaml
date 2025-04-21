@@ -50,4 +50,3 @@ schema:
     - str # List of strings (usernames or XUIDs)
   ops_list:
     - str # List of strings (usernames or XUIDs)
-image: "ghcr.io/megakid/ha-addon-minecraft-geyser/{arch}" # Replace with your GHCR path
