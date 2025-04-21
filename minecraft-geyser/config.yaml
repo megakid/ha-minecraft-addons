@@ -23,14 +23,10 @@ options:
   MOTD: "Welcome to our Minecraft Server!"
   MAX_PLAYERS: 20
   ONLINE_MODE: true
-  ALLOW_FLIGHT: false
-  DIFFICULTY: easy
-  GAMEMODE: survival
+  ALLOW_FLIGHT: true
+  DIFFICULTY: peaceful
+  GAMEMODE: creative
   PLUGINS: https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
-  WHITELIST: player1,player2
-  EXISTING_WHITELIST_FILE: SYNCHRONIZE
-  OPS: admin1,admin2
-  EXISTING_OPS_FILE: SYNCHRONIZE
   USER_API_PROVIDER: mojang
 schema:
   EULA: bool
@@ -44,10 +40,8 @@ schema:
   DIFFICULTY: list(peaceful|easy|normal|hard)
   GAMEMODE: list(survival|creative|adventure|spectator)
   PLUGINS: str
-  WHITELIST: str
+  WHITELIST: str?
   ENABLE_WHITELIST: bool?
   ENFORCE_WHITELIST: bool?
-  EXISTING_WHITELIST_FILE: list(SKIP|SYNCHRONIZE|MERGE|SYNC_FILE_MERGE_LIST)
   USER_API_PROVIDER: list(playerdb|mojang)
-  OPS: str
-  EXISTING_OPS_FILE: list(SKIP|SYNCHRONIZE|MERGE|SYNC_FILE_MERGE_LIST)
+  OPS: str?
