@@ -1,0 +1,6 @@
+# repository.yaml
+# Defines the repository for the Home Assistant Add-on Store.
+# Place this file in the root of your GitHub repository.
+name: 'Home Assistant Minecraft Server Add-ons'
+url: 'https://github.com/megakid/ha-minecraft-addons' # Replace with your repo URL
+maintainer: 'megakid <megakid@gmail.com>' # Replace with your details

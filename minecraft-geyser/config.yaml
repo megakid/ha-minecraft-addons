@@ -1,0 +1,53 @@
+# minecraft-geyser/config.yaml
+# Home Assistant Add-on Manifest
+
+name: "Minecraft Server (PaperMC + Geyser)"
+version: "1.1.0" # Start with an initial version
+slug: "minecraft_geyser"
+description: "Run a Minecraft PaperMC server with Geyser/Floodgate for Java & Bedrock cross-play"
+url: "https://github.com/megakid/ha-minecraft-addons/tree/main/minecraft-geyser" # Link to specific add-on directory
+arch:
+  - amd64
+  - aarch64
+  # - armv7 # PaperMC might be heavy for armv7, test before enabling
+init: false # Use the run.sh script as the entrypoint
+startup: application # Let the run.sh script manage the server lifecycle
+boot: auto # Start the add-on automatically when Home Assistant starts
+hassio_api: true # Needed for bashio
+map:
+  - data:rw # Map /data directory for persistent server files
+ports:
+  25565/tcp: 25565 # Default Java Edition port
+  19132/udp: 19132 # Default Bedrock Edition port (via Geyser)
+ports_description:
+  25565/tcp: "Minecraft Java Edition Port"
+  19132/udp: "Minecraft Bedrock Edition Port (Geyser)"
+options:
+  minecraft_version: "1.20.6" # Specify desired Minecraft version (check PaperMC/Geyser compatibility)
+  memory: "2048" # Memory allocation in MB
+  motd: "Welcome to the §aHome Assistant§r Minecraft Server!" # Message of the Day
+  max_players: 20
+  difficulty: "easy" # easy, normal, hard, peaceful
+  gamemode: "survival" # survival, creative, adventure, spectator
+  view_distance: 10 # Server render distance
+  simulation_distance: 10 # Server simulation distance
+  online_mode: true # MUST be true for Geyser/Floodgate standalone
+  enforce_whitelist: false
+  allow_list: [] # List of Java player names (case-sensitive) or Bedrock XUIDs (prefixed with '.')
+  ops_list: [] # List of Java player names (case-sensitive) or Bedrock XUIDs (prefixed with '.') to be operators
+schema:
+  minecraft_version: str # Consider using a list for specific supported versions later
+  memory: int(1024,)? # Minimum 1GB RAM recommended
+  motd: str
+  max_players: int(1,)?
+  difficulty: list(easy|normal|hard|peaceful)
+  gamemode: list(survival|creative|adventure|spectator)
+  view_distance: int(3,32)?
+  simulation_distance: int(3,32)?
+  online_mode: bool # Keep this true
+  enforce_whitelist: bool
+  allow_list:
+    - str # List of strings (usernames or XUIDs)
+  ops_list:
+    - str # List of strings (usernames or XUIDs)
+image: "ghcr.io/megakid/ha-addon-minecraft-geyser/{arch}" # Replace with your GHCR path
