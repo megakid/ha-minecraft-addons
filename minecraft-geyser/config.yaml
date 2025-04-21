@@ -1,5 +1,5 @@
 name: Minecraft Geyser Server
-version: "1.1.2"
+version: "1.1.3"
 slug: minecraft_geyser
 description: Minecraft server supporting Java and Bedrock clients with whitelist and operator management
 init: false
@@ -25,8 +25,8 @@ options:
   MAX_PLAYERS: 20
   ONLINE_MODE: true
   ALLOW_FLIGHT: true
-  DIFFICULTY: peaceful
-  GAMEMODE: creative
+  DIFFICULTY: "1" # easy
+  GAMEMODE: "0" # survival
   PLUGINS: https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
   USER_API_PROVIDER: mojang
 schema:
@@ -39,8 +39,8 @@ schema:
   MAX_PLAYERS: int
   ONLINE_MODE: bool
   ALLOW_FLIGHT: bool
-  DIFFICULTY: list(peaceful|easy|normal|hard)
-  GAMEMODE: list(survival|creative|adventure|spectator)
+  DIFFICULTY: list(0|1|2|3) # peaceful, easy, normal, hard
+  GAMEMODE: list(0|1|2|3) # survival, creative, adventure, spectator
   PLUGINS: str
   WHITELIST: str?
   ENABLE_WHITELIST: bool?
@@ -48,3 +48,4 @@ schema:
   USE_AIKAR_FLAGS: bool?
   USER_API_PROVIDER: list(playerdb|mojang)
   OPS: str?
+  TZ: str?
