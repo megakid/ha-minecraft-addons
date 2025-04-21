@@ -18,6 +18,7 @@ map:
 options:
   EULA: true
   TYPE: PAPER
+  PAPER_CHANNEL: default
   VERSION: "1.21.5"
   MOTD: "Welcome to our Minecraft Server!"
   MAX_PLAYERS: 20
@@ -36,6 +37,7 @@ options:
 schema:
   EULA: bool
   TYPE: str
+  PAPER_CHANNEL: list(default|experimental)
   VERSION: str
   MOTD: str
   MAX_PLAYERS: int
