@@ -25,8 +25,8 @@ options:
   MAX_PLAYERS: 20
   ONLINE_MODE: true
   ALLOW_FLIGHT: true
-  DIFFICULTY: "1" # easy
-  GAMEMODE: "0" # survival
+  DIFFICULTY: peaceful
+  MODE: creative
   PLUGINS: https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
   USER_API_PROVIDER: mojang
 schema:
@@ -39,8 +39,8 @@ schema:
   MAX_PLAYERS: int
   ONLINE_MODE: bool
   ALLOW_FLIGHT: bool
-  DIFFICULTY: list(0|1|2|3) # peaceful, easy, normal, hard
-  GAMEMODE: list(0|1|2|3) # survival, creative, adventure, spectator
+  DIFFICULTY: list(peaceful|easy|normal|hard)
+  MODE: list(survival|creative|adventure|spectator)
   PLUGINS: str
   WHITELIST: str?
   ENABLE_WHITELIST: bool?
