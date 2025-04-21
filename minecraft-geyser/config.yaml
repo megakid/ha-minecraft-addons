@@ -20,6 +20,7 @@ options:
   TYPE: PAPER
   PAPER_CHANNEL: experimental
   VERSION: 1.21.5
+  MEMORY: 1024M
   MOTD: Welcome to our Minecraft Server!
   MAX_PLAYERS: 20
   ONLINE_MODE: true
@@ -33,6 +34,7 @@ schema:
   TYPE: str
   PAPER_CHANNEL: list(default|experimental)
   VERSION: str
+  MEMORY: str
   MOTD: str
   MAX_PLAYERS: int
   ONLINE_MODE: bool
