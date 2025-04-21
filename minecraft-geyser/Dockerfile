@@ -49,4 +49,4 @@ LABEL io.hass.version="VERSION_TAG" \
       org.opencontainers.image.description="Runs a Minecraft PaperMC server with Geyser and Floodgate for Java/Bedrock cross-play." \
       org.opencontainers.image.source="https://github.com/YOUR_GITHUB_USERNAME/ha-minecraft-addons" \
       org.opencontainers.image.authors="Your Name <your.email@example.com>" \
-      org.opencontainers.image.licenses="MIT" # Adjust license if needed
+      org.opencontainers.image.licenses="MIT"
