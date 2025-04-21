@@ -46,6 +46,7 @@ schema:
   ENABLE_WHITELIST: bool?
   ENFORCE_WHITELIST: bool?
   USE_AIKAR_FLAGS: bool?
+  FORCE_GAMEMODE: bool?
   USER_API_PROVIDER: list(playerdb|mojang)
   OPS: str?
   TZ: str?
