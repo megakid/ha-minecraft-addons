@@ -7,6 +7,17 @@ BACKUP_DEST="/media/minecraft-backups"
 DRIVEBACKUP_VERSION="1.8.1"
 PLUGINS_DIR="/data/plugins"
 
+# itzg drops to this uid:gid before running the server. Anything we create
+# while still root needs to be handed over or the server cannot write to it.
+SERVER_UID="${UID:-1000}"
+SERVER_GID="${GID:-1000}"
+
+ensure_owned_dir() {
+    local dir="$1"
+    mkdir -p "${dir}"
+    chown -R "${SERVER_UID}:${SERVER_GID}" "${dir}" 2>/dev/null || true
+}
+
 # Download a plugin jar straight into /data/plugins, bypassing itzg's PLUGINS
 # env-var pipeline. The alexbelgium template injects the original PLUGINS value
 # into every cont-init.d script at boot, which clobbers any modification we
@@ -51,13 +62,14 @@ if [ "${BLUEMAP_ENABLED-}" = "true" ]; then
         echo "accept-download: true" > "${bluemap_cfg}"
         log "Seeded BlueMap core.conf with accept-download: true"
     fi
+    ensure_owned_dir "${bluemap_cfg_dir}"
 else
     prune_other_versions "bluemap-*-paper.jar" ""
 fi
 
 if [ "${BACKUP_ENABLED-}" = "true" ]; then
     fetch_plugin "https://github.com/MaxMaeder/DriveBackupV2/releases/download/v${DRIVEBACKUP_VERSION}/DriveBackupV2.jar" "DriveBackupV2.jar"
-    mkdir -p "${BACKUP_DEST}"
+    ensure_owned_dir "${BACKUP_DEST}"
 
     plugin_cfg_dir="/data/plugins/DriveBackupV2"
     plugin_cfg="${plugin_cfg_dir}/config.yml"
@@ -80,6 +92,7 @@ EOF
     else
         log "DriveBackupV2 config already exists; not overwriting"
     fi
+    ensure_owned_dir "${plugin_cfg_dir}"
 else
     rm -f "${PLUGINS_DIR}/DriveBackupV2.jar" 2>/dev/null
 fi
