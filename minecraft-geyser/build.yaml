@@ -1,4 +1,4 @@
 build_from:
-  amd64: "itzg/minecraft-server:java21"
-  aarch64: "itzg/minecraft-server:java21"
-  armv7: "itzg/minecraft-server:java21"
+  amd64: "itzg/minecraft-server:java25"
+  aarch64: "itzg/minecraft-server:java25"
+  armv7: "itzg/minecraft-server:java25"

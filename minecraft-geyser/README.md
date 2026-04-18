@@ -30,6 +30,9 @@ Media browser.
 - `BACKUP_DELAY_MINUTES` — minutes between backups (default `1440` = daily).
 - `BACKUP_KEEP_COUNT` — how many backups to retain (default `7`).
 
+The seeded backup list follows the `LEVEL` env var — if you set `LEVEL: myworld`,
+backups will target `myworld`, `myworld_nether` and `myworld_the_end`.
+
 After first boot you can edit `/data/plugins/DriveBackupV2/config.yml` (e.g. via
 the SSH or Samba addon) to set up Google Drive / OneDrive / Dropbox destinations
 or refine the schedule. The seeded config is written **once** and not
