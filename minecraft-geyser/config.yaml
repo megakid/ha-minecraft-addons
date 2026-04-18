@@ -1,5 +1,5 @@
 name: Minecraft Geyser Server
-version: "1.1.4"
+version: "1.1.5"
 slug: minecraft_geyser
 description: Minecraft server supporting Java and Bedrock clients with whitelist and operator management
 init: false
@@ -18,7 +18,7 @@ map:
 options:
   EULA: true
   TYPE: PAPER
-  PAPER_CHANNEL: experimental
+  PAPER_CHANNEL: stable
   VERSION: 1.21.5
   MEMORY: 1024M
   MOTD: Welcome to our Minecraft Server!
@@ -32,7 +32,7 @@ options:
 schema:
   EULA: bool
   TYPE: str
-  PAPER_CHANNEL: list(default|experimental)
+  PAPER_CHANNEL: list(stable|beta|alpha|recommended)
   VERSION: str
   MEMORY: str
   MOTD: str
