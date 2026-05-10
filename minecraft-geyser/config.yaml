@@ -1,5 +1,5 @@
 name: Minecraft Geyser Server
-version: "1.2.3"
+version: "1.3.0"
 slug: minecraft_geyser
 description: Minecraft server supporting Java and Bedrock clients with whitelist and operator management
 init: false
@@ -26,7 +26,7 @@ options:
   EULA: true
   TYPE: PAPER
   PAPER_CHANNEL: default
-  VERSION: "1.21.11"
+  VERSION: "26.1.2"
   MEMORY: 1024M
   MOTD: Welcome to our Minecraft Server!
   MAX_PLAYERS: 20
@@ -37,7 +37,7 @@ options:
   PLUGINS: https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
   USER_API_PROVIDER: mojang
   BLUEMAP_ENABLED: true
-  BLUEMAP_VERSION: "5.18"
+  BLUEMAP_VERSION: "5.20"
   ENABLE_RCON: false
   RCON_PORT: 25575
   BACKUP_ENABLED: true
