@@ -38,6 +38,11 @@ the SSH or Samba addon) to set up Google Drive / OneDrive / Dropbox destinations
 or refine the schedule. The seeded config is written **once** and not
 overwritten on subsequent starts.
 
+If an older DriveBackupV2 config is found writing local backups to `/data/backups`
+with unbounded retention, the add-on migrates those managed backup settings back
+to `/media/minecraft-backups/`, applies `BACKUP_KEEP_COUNT`, and removes the
+legacy `plugins` backup entry.
+
 ### RCON (remote admin)
 
 Set `ENABLE_RCON: true` and `RCON_PASSWORD: <something>`. RCON listens on
