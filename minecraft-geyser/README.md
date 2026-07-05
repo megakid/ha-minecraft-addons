@@ -40,8 +40,9 @@ overwritten on subsequent starts.
 
 If an older DriveBackupV2 config is found writing local backups to `/data/backups`
 with unbounded retention, the add-on migrates those managed backup settings back
-to `/media/minecraft-backups/`, applies `BACKUP_KEEP_COUNT`, and removes the
-legacy `plugins` backup entry.
+to the add-on-managed `minecraft-backups` path, symlinked to
+`/media/minecraft-backups/`, applies `BACKUP_KEEP_COUNT`, and removes the legacy
+`plugins` backup entry.
 
 ### RCON (remote admin)
 

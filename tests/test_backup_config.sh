@@ -18,6 +18,7 @@ chmod +x "${tmp_dir}/bin/curl"
 
 export PLUGINS_DIR="${tmp_dir}/data/plugins"
 export BACKUP_DEST="${tmp_dir}/media/minecraft-backups"
+export SERVER_DIR="${tmp_dir}/data"
 export BLUEMAP_ENABLED=false
 export BACKUP_ENABLED=true
 export BACKUP_DELAY_MINUTES=1440
@@ -62,7 +63,9 @@ config="${PLUGINS_DIR}/DriveBackupV2/config.yml"
 grep -Fq 'delay: 1440' "${config}"
 grep -Fq 'keep-count: 7' "${config}"
 grep -Fq 'local-keep-count: 7' "${config}"
-grep -Fq "local-save-directory: \"${BACKUP_DEST}\"" "${config}"
+grep -Fq 'local-save-directory: "minecraft-backups"' "${config}"
+test -L "${SERVER_DIR}/minecraft-backups"
+test "$(readlink "${SERVER_DIR}/minecraft-backups")" = "${BACKUP_DEST}"
 
 if grep -Fq 'path: "plugins"' "${config}"; then
     echo "legacy plugins backup stanza was not removed" >&2

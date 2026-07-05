@@ -4,6 +4,9 @@ set -u
 log() { echo "[features] $*"; }
 
 BACKUP_DEST="${BACKUP_DEST:-/media/minecraft-backups}"
+SERVER_DIR="${SERVER_DIR:-/data}"
+BACKUP_LOCAL_DIR="${BACKUP_LOCAL_DIR:-minecraft-backups}"
+BACKUP_LINK="${BACKUP_LINK:-${SERVER_DIR}/${BACKUP_LOCAL_DIR}}"
 DRIVEBACKUP_VERSION="${DRIVEBACKUP_VERSION:-1.8.1}"
 PLUGINS_DIR="${PLUGINS_DIR:-/data/plugins}"
 
@@ -16,6 +19,15 @@ ensure_owned_dir() {
     local dir="$1"
     mkdir -p "${dir}"
     chown -R "${SERVER_UID}:${SERVER_GID}" "${dir}" 2>/dev/null || true
+}
+
+ensure_backup_target() {
+    ensure_owned_dir "${BACKUP_DEST}"
+    if [ -L "${BACKUP_LINK}" ] || [ ! -e "${BACKUP_LINK}" ]; then
+        ln -sfn "${BACKUP_DEST}" "${BACKUP_LINK}"
+    else
+        log "${BACKUP_LINK} already exists; not replacing it with a symlink"
+    fi
 }
 
 # Download a plugin jar straight into PLUGINS_DIR, bypassing itzg's PLUGINS
@@ -105,7 +117,7 @@ migrate_backup_config() {
     set_yaml_scalar "${file}" "delay" "${BACKUP_DELAY_MINUTES}"
     set_yaml_scalar "${file}" "keep-count" "${BACKUP_KEEP_COUNT}"
     set_yaml_scalar "${file}" "local-keep-count" "${BACKUP_KEEP_COUNT}"
-    set_yaml_scalar "${file}" "local-save-directory" "\"${BACKUP_DEST}\""
+    set_yaml_scalar "${file}" "local-save-directory" "\"${BACKUP_LOCAL_DIR}\""
     set_yaml_scalar "${file}" "backups-require-players" "false"
     remove_legacy_plugin_backup_stanza "${file}"
 }
@@ -131,7 +143,7 @@ fi
 
 if [ "${BACKUP_ENABLED-}" = "true" ]; then
     fetch_plugin "https://github.com/MaxMaeder/DriveBackupV2/releases/download/v${DRIVEBACKUP_VERSION}/DriveBackupV2.jar" "DriveBackupV2.jar"
-    ensure_owned_dir "${BACKUP_DEST}"
+    ensure_backup_target
 
     plugin_cfg_dir="${PLUGINS_DIR}/DriveBackupV2"
     plugin_cfg="${plugin_cfg_dir}/config.yml"
@@ -142,7 +154,7 @@ if [ "${BACKUP_ENABLED-}" = "true" ]; then
 delay: ${BACKUP_DELAY_MINUTES}
 keep-count: ${BACKUP_KEEP_COUNT}
 local-keep-count: ${BACKUP_KEEP_COUNT}
-local-save-directory: "${BACKUP_DEST}"
+local-save-directory: "${BACKUP_LOCAL_DIR}"
 backups-require-players: false
 backup-list:
   - glob: "${level}*"
