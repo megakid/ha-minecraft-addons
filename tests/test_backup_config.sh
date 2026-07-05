@@ -71,3 +71,18 @@ if grep -Fq 'path: "plugins"' "${config}"; then
     echo "legacy plugins backup stanza was not removed" >&2
     exit 1
 fi
+
+cat > "${config}" <<CONFIG
+delay: 1440
+keep-count: 7
+local-keep-count: 7
+local-save-directory: "${BACKUP_DEST}"
+backups-require-players: false
+backup-list:
+- glob: "world*"
+  format: "Backup-%NAME-%FORMAT.zip"
+  create: true
+CONFIG
+
+bash "${features_script}" > "${tmp_dir}/features-absolute.log"
+grep -Fq 'local-save-directory: "minecraft-backups"' "${config}"

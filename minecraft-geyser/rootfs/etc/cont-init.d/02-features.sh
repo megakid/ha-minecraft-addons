@@ -100,6 +100,8 @@ remove_legacy_plugin_backup_stanza() {
 backup_config_needs_migration() {
     local file="$1"
     grep -Eq '^local-save-directory:[[:space:]]*"?backups"?[[:space:]]*$' "${file}" && return 0
+    grep -Fxq "local-save-directory: \"${BACKUP_DEST}\"" "${file}" && return 0
+    grep -Fxq "local-save-directory: ${BACKUP_DEST}" "${file}" && return 0
     grep -Eq '^local-keep-count:[[:space:]]*0[[:space:]]*$' "${file}" && return 0
     grep -Eq '^[[:space:]]*-[[:space:]]*path:[[:space:]]*"?plugins"?[[:space:]]*$' "${file}" && return 0
     return 1
