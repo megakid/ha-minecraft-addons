@@ -28,11 +28,6 @@ export LEVEL=world
 mkdir -p "${PLUGINS_DIR}/DriveBackupV2"
 touch "${PLUGINS_DIR}/DriveBackupV2.jar"
 
-printf 'test-geyser' > "${PLUGINS_DIR}/Geyser-Spigot.jar"
-printf 'test-floodgate' > "${PLUGINS_DIR}/floodgate-spigot.jar"
-export GEYSER_SHA256="$(sha256sum "${PLUGINS_DIR}/Geyser-Spigot.jar" | awk '{print $1}')"
-export FLOODGATE_SHA256="$(sha256sum "${PLUGINS_DIR}/floodgate-spigot.jar" | awk '{print $1}')"
-
 cat > "${PLUGINS_DIR}/DriveBackupV2/config.yml" <<'CONFIG'
 version: 2
 
