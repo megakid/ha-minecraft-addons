@@ -9,6 +9,12 @@ BACKUP_LOCAL_DIR="${BACKUP_LOCAL_DIR:-minecraft-backups}"
 BACKUP_LINK="${BACKUP_LINK:-${SERVER_DIR}/${BACKUP_LOCAL_DIR}}"
 DRIVEBACKUP_VERSION="${DRIVEBACKUP_VERSION:-1.8.1}"
 PLUGINS_DIR="${PLUGINS_DIR:-/data/plugins}"
+GEYSER_VERSION="${GEYSER_VERSION:-2.11.2}"
+GEYSER_BUILD="${GEYSER_BUILD:-1233}"
+GEYSER_SHA256="${GEYSER_SHA256:-a851adeb232e45644526ce16263e819ceb427a98f3919e5a97e6334b165c2f83}"
+FLOODGATE_VERSION="${FLOODGATE_VERSION:-2.2.5}"
+FLOODGATE_BUILD="${FLOODGATE_BUILD:-140}"
+FLOODGATE_SHA256="${FLOODGATE_SHA256:-9f436c42ffd8b1091a437d7a4e16f82181b9d5314f8b1732dfa9d5a4fffb19fe}"
 
 # itzg drops to this uid:gid before running the server. Anything we create
 # while still root needs to be handed over or the server cannot write to it.
@@ -51,6 +57,42 @@ fetch_plugin() {
         log "ERROR: failed to download ${name} from ${url}"
         return 1
     fi
+}
+
+# Geyser and Floodgate are normally installed from the PLUGINS option. Those
+# jars live in persistent add-on data, so itzg correctly leaves them alone on
+# later starts. Pinning and verifying them here lets an add-on update replace an
+# outdated proxy without making every restart depend on the download service.
+install_pinned_plugin() {
+    local url="$1" name="$2" expected_sha256="$3"
+    local dest="${PLUGINS_DIR}/${name}" tmp="${PLUGINS_DIR}/.${name}.tmp"
+    local actual_sha256
+
+    if [ -f "${dest}" ]; then
+        actual_sha256="$(sha256sum "${dest}" | awk '{print $1}')"
+        if [ "${actual_sha256}" = "${expected_sha256}" ]; then
+            log "${name} is already up to date"
+            return 0
+        fi
+    fi
+
+    mkdir -p "${PLUGINS_DIR}"
+    log "Updating ${name}..."
+    if ! curl -fsSL --retry 3 -o "${tmp}" "${url}"; then
+        rm -f "${tmp}"
+        log "ERROR: failed to download ${name} from ${url}"
+        return 1
+    fi
+
+    actual_sha256="$(sha256sum "${tmp}" | awk '{print $1}')"
+    if [ "${actual_sha256}" != "${expected_sha256}" ]; then
+        rm -f "${tmp}"
+        log "ERROR: checksum mismatch for ${name}"
+        return 1
+    fi
+
+    mv "${tmp}" "${dest}"
+    log "Installed ${name}"
 }
 
 # Drop any leftover jars whose filename matches the pattern but not the wanted
@@ -123,6 +165,16 @@ migrate_backup_config() {
     set_yaml_scalar "${file}" "backups-require-players" "false"
     remove_legacy_plugin_backup_stanza "${file}"
 }
+
+install_pinned_plugin \
+    "https://download.geysermc.org/v2/projects/geyser/versions/${GEYSER_VERSION}/builds/${GEYSER_BUILD}/downloads/spigot" \
+    "Geyser-Spigot.jar" \
+    "${GEYSER_SHA256}" || exit 1
+install_pinned_plugin \
+    "https://download.geysermc.org/v2/projects/floodgate/versions/${FLOODGATE_VERSION}/builds/${FLOODGATE_BUILD}/downloads/spigot" \
+    "floodgate-spigot.jar" \
+    "${FLOODGATE_SHA256}" || exit 1
+ensure_owned_dir "${PLUGINS_DIR}"
 
 if [ "${BLUEMAP_ENABLED-}" = "true" ]; then
     bluemap_jar="bluemap-${BLUEMAP_VERSION}-paper.jar"
