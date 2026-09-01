@@ -36,6 +36,7 @@ options:
   MODE: creative
   PLUGINS: https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
   USER_API_PROVIDER: mojang
+  LEVEL: world
   BLUEMAP_ENABLED: true
   BLUEMAP_VERSION: "5.20"
   ENABLE_RCON: false
@@ -62,6 +63,7 @@ schema:
   USE_AIKAR_FLAGS: bool?
   FORCE_GAMEMODE: bool?
   USER_API_PROVIDER: list(playerdb|mojang)
+  LEVEL: str
   OPS: str?
   TZ: str?
   BLUEMAP_ENABLED: bool
