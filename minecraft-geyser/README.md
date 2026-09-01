@@ -1,4 +1,4 @@
-# HAMC Server (Java + Bedrock via Geyser)
+# Minecraft Geyser Server
 
 This add-on hosts a Minecraft server inside Home Assistant. It runs Paper (Java)
 with [Geyser]+[Floodgate] so Bedrock clients can join too. Built on top of
