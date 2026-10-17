@@ -1,8 +1,9 @@
 name: Minecraft Geyser Server
-version: "1.4.1"
+version: "1.5.0"
 slug: minecraft_geyser
 description: Minecraft server supporting Java and Bedrock clients with whitelist and operator management
 init: false
+hassio_api: true
 arch:
   - amd64
   - aarch64
@@ -14,10 +15,14 @@ panel_title: Minecraft
 ports:
   25565/tcp: 25565
   19132/udp: 19132
+  19132/tcp: 19132
+  19133/udp: 19133
   25575/tcp: 25575
 ports_description:
   25565/tcp: Minecraft Java Edition port
-  19132/udp: Minecraft Bedrock Edition port
+  19132/udp: Minecraft Bedrock Edition port (RakNet)
+  19132/tcp: Bedrock NetherNet signaling
+  19133/udp: Bedrock NetherNet connections
   25575/tcp: RCON port (only used if ENABLE_RCON is true)
 map:
   - addons:rw
@@ -36,6 +41,7 @@ options:
   MODE: creative
   PLUGINS: https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
   USER_API_PROVIDER: mojang
+  BEDROCK_TRANSPORT: both
   LEVEL: world
   BLUEMAP_ENABLED: true
   BLUEMAP_VERSION: "5.20"
@@ -64,6 +70,8 @@ schema:
   USE_AIKAR_FLAGS: bool?
   FORCE_GAMEMODE: bool?
   USER_API_PROVIDER: list(playerdb|mojang)
+  BEDROCK_TRANSPORT: list(raknet|both|nethernet)
+  BEDROCK_ADVERTISE_ADDRESSES: str?
   LEVEL: str
   OPS: str?
   TZ: str?
