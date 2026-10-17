@@ -7,7 +7,28 @@ with [Geyser]+[Floodgate] so Bedrock clients can join too. Built on top of
 ## Connecting
 
 - **Java Edition:** `<your_ip>:25565` — forward `25565/tcp` on your router for outside-LAN play.
-- **Bedrock Edition:** `<your_ip>` on the default port — forward `19132/udp`.
+- **Bedrock Edition:** `<your_ip>` on the default port - forward `19132/udp`,
+  `19132/tcp` and `19133/udp`.
+
+### Bedrock NetherNet
+
+Bedrock Edition 26.60 (due 27 October 2026) drops RakNet, the old way Bedrock
+clients connect, for [NetherNet]: the client asks the server how to connect
+over TCP ("signaling"), then plays over WebRTC on UDP. Geyser needs both turned
+on, and the add-on does that for you on every start:
+
+- `BEDROCK_TRANSPORT` (default `both`) - `both` accepts RakNet on `19132/udp`
+  and NetherNet on `19133/udp`, so older and newer Bedrock clients can join.
+  Switch to `nethernet` once everyone is on 26.60, or `raknet` to turn
+  NetherNet off.
+- Signaling runs on `19132/tcp` and tells players which address to connect to.
+  The add-on advertises Home Assistant's own LAN address, read from the
+  Supervisor. For players outside your network, set
+  `BEDROCK_ADVERTISE_ADDRESSES` to a comma-separated list that also includes
+  your public address or hostname, e.g. `192.168.1.20,mc.example.com`. Add
+  `:port` if you map `19133/udp` to a different port on the host.
+
+Players joining by IP see a one-time "trust" prompt the first time they connect.
 
 ## Bundled features
 
@@ -83,6 +104,7 @@ configuration screen.
 [BlueMap]: https://bluemap.bluecolored.de/
 [DriveBackupV2]: https://github.com/MaxMaeder/DriveBackupV2
 [Modrinth]: https://modrinth.com
+[NetherNet]: https://geysermc.org/blog/preparing-for-nethernet
 
 ## Acknowledgements
 
