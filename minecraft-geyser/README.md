@@ -50,6 +50,26 @@ Set `ENABLE_RCON: true` and `RCON_PASSWORD: <something>`. RCON listens on
 `25575/tcp` (forwarded by the addon). Use any RCON client to send server
 commands without needing to be in-game.
 
+### Modrinth plugins and datapacks
+
+`MODRINTH_PROJECTS` installs [Modrinth] projects by slug, picking the newest
+release that matches `TYPE` and `VERSION`. It is optional, so tick "Show unused
+optional configuration options" to see it. Separate projects with commas and
+prefix datapacks with `datapack:`:
+
+```text
+clickvillagers,villagers-with-names,datapack:attract-villagers,datapack:call-your-horse,datapack:lib-5555ff
+```
+
+- Dependencies are not installed for you: list them too (`call-your-horse`
+  needs `lib-5555ff`).
+- Startup fails if a project has no release for your `VERSION`. Add `?` after
+  the slug (`clickvillagers?`) to skip it with a warning instead.
+- Removing a project from the list deletes its file on the next start.
+- Bedrock players only see what vanilla Minecraft can draw: plugins and
+  datapacks that need a resource pack or display entities won't show up for
+  them.
+
 ## All options
 
 Most options pass straight through to itzg/minecraft-server — see the [full
@@ -62,6 +82,7 @@ configuration screen.
 [itzg-env]: https://docker-minecraft-server.readthedocs.io/en/latest/variables/
 [BlueMap]: https://bluemap.bluecolored.de/
 [DriveBackupV2]: https://github.com/MaxMaeder/DriveBackupV2
+[Modrinth]: https://modrinth.com
 
 ## Acknowledgements
 

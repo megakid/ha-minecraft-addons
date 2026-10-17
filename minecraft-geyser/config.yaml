@@ -1,5 +1,5 @@
 name: Minecraft Geyser Server
-version: "1.3.3"
+version: "1.4.0"
 slug: minecraft_geyser
 description: Minecraft server supporting Java and Bedrock clients with whitelist and operator management
 init: false
@@ -56,6 +56,7 @@ schema:
   DIFFICULTY: list(peaceful|easy|normal|hard)
   MODE: list(survival|creative|adventure|spectator)
   PLUGINS: str
+  MODRINTH_PROJECTS: str?
   WHITELIST: str?
   ENABLE_WHITELIST: bool?
   ENFORCE_WHITELIST: bool?
